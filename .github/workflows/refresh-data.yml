@@ -1,0 +1,53 @@
+yaml
+name: Refresh screener data
+
+on:
+  schedule:
+    # 11:30 UTC = 17:00 IST, Monday to Friday (after NSE close)
+    - cron: "30 11 * * 1-5"
+  workflow_dispatch:
+  # Also run when the fetcher or this workflow changes (data commits don't match these paths)
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/refresh-data.yml"
+      - "scripts/**"
+      - "requirements.txt"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: refresh-data
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Fetch Nifty 500 data
+        run: python scripts/fetch_data.py
+
+      - name: Commit updated data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
+          git add data/
+          if git diff --cached --quiet; then
+            echo "No data changes."
+          else
+            git commit -m "data: refresh $(date -u +'%Y-%m-%d')"
+            git pull --rebase origin main
+            git push
+          fi
