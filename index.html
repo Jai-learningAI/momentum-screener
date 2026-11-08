@@ -98,10 +98,26 @@ section > p{color:var(--muted);margin:0 0 12px;font-size:14px}
 .empty{padding:28px;text-align:center;color:var(--muted)}
 .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--surface);padding:8px 16px;border-radius:8px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none}
 .toast.on{opacity:1}
+.meta .refresh{display:flex;gap:10px;align-items:center;justify-content:flex-end;margin-top:8px}
+.status{font-size:13px;color:var(--muted)}
+.status.err{color:var(--fail)} .status.ok{color:var(--pass)}
+.spin{display:inline-block;width:10px;height:10px;border:2px solid var(--line);border-top-color:var(--pass);border-radius:50%;animation:sp 0.9s linear infinite;vertical-align:-1px;margin-right:6px}
+@keyframes sp{to{transform:rotate(360deg)}}
+dialog{border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--ink);padding:24px;max-width:520px;width:calc(100% - 32px)}
+dialog::backdrop{background:rgba(10,20,16,.45)}
+dialog h2{font-size:20px;margin-bottom:8px}
+dialog p,dialog li{font-size:14px;color:var(--muted)}
+dialog ol{padding-left:20px;margin:8px 0 14px}
+dialog .tok{display:flex;gap:8px;margin:10px 0 6px}
+dialog .tok input{flex:1;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg)}
+dialog .owner{border-top:1px solid var(--line);margin-top:16px;padding-top:14px}
+dialog .owner h3{font-size:15px;margin:0 0 4px}
+dialog code{font-size:12.5px}
 footer{color:var(--muted);font-size:12.5px;margin-top:40px;max-width:75ch}
 
 details.mobile-filters > summary{display:none}
 @media (max-width:900px){
+  .meta .refresh{justify-content:flex-start}
   .wrap{grid-template-columns:1fr}
   aside{position:static;height:auto;border-right:0;border-bottom:1px solid var(--line);padding:20px 16px}
   main{padding:20px 16px 48px}
@@ -132,7 +148,9 @@ details.mobile-filters > summary{display:none}
     <div id="banner"></div>
     <div class="head">
       <div class="tally"><b id="nPass">–</b><span id="nPassLabel">stocks pass every filter</span></div>
-      <div class="meta" id="meta"></div>
+      <div class="meta"><div id="meta"></div>
+        <div class="refresh"><span class="status" id="status" role="status"></span><button class="btn" id="btnRefresh">Refresh now</button><button class="btn" id="btnRefreshSet" aria-label="Refresh settings" title="Refresh settings">⚙</button></div>
+      </div>
     </div>
     <div class="funnel" id="funnel" aria-hidden="true"></div>
     <div class="funnel-legend" id="funnelLegend"></div>
@@ -157,6 +175,23 @@ details.mobile-filters > summary{display:none}
   </main>
 </div>
 <div class="toast" id="toast"></div>
+
+<dialog id="dlg">
+  <h2>Refresh data</h2>
+  <p>Data refreshes automatically every weekday at 5 PM IST. The repo owner can also refresh it on demand, which takes about 2–5 minutes.</p>
+  <div class="owner">
+    <h3>Owner setup (one time)</h3>
+    <p id="ownerState"></p>
+    <ol>
+      <li>Open <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">GitHub → new fine-grained token</a>.</li>
+      <li>Repository access: <b>Only select repositories</b>, then pick <code id="repoName"></code>.</li>
+      <li>Permissions: <b>Actions: Read and write</b> and <b>Contents: Read-only</b>. Generate, then paste it here.</li>
+    </ol>
+    <div class="tok"><input id="tokInput" type="password" placeholder="github_pat_…" autocomplete="off" aria-label="GitHub token"><button class="btn primary" id="tokSave">Save token</button></div>
+    <p>The token is saved only in this browser and sent only to api.github.com.</p>
+    <div class="btns"><button class="btn" id="tokClear">Remove token</button><button class="btn" id="dlgClose">Close</button></div>
+  </div>
+</dialog>
 
 <script>
 const DEFAULT_FILTERS = [
@@ -359,6 +394,97 @@ $('btnCsv').onclick = () => {
 ['optMissing','optNear'].forEach(id => $(id).onchange = render);
 $('search').oninput = () => { clearTimeout(t); t = setTimeout(render, 120); };
 
+/* ---------- on-demand refresh (owner only, via GitHub API) ---------- */
+const REPO = (() => {
+  const m = location.hostname.match(/^([^.]+)\.github\.io$/i);
+  const seg = location.pathname.split('/').filter(Boolean)[0];
+  if (m && seg) return {owner: m[1], repo: seg};
+  return {owner: 'Jai-learningAI', repo: 'momentum-screener'}; // used when testing locally
+})();
+const WORKFLOW = 'refresh-data.yml';
+const API = `https://api.github.com/repos/${REPO.owner}/${REPO.repo}`;
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const getToken = () => { try { return localStorage.getItem('ghToken') || ''; } catch(e){ return ''; } };
+let refreshing = false;
+
+function gh(path, opts = {}){
+  return fetch(API + path, {...opts, headers: {
+    'Authorization': `Bearer ${getToken()}`, 'Accept': 'application/vnd.github+json',
+    'X-GitHub-Api-Version': '2022-11-28', ...(opts.headers || {})}});
+}
+function setStatus(html, kind = ''){ const el = $('status'); el.className = 'status ' + kind; el.innerHTML = html; }
+
+function openDialog(){
+  $('repoName').textContent = `${REPO.owner}/${REPO.repo}`;
+  $('ownerState').textContent = getToken()
+    ? 'A token is saved in this browser. Paste a new one to replace it.'
+    : 'Paste a GitHub token to enable the Refresh now button in this browser.';
+  $('tokInput').value = '';
+  $('dlg').showModal();
+}
+$('dlgClose').onclick = () => $('dlg').close();
+$('tokClear').onclick = () => { try { localStorage.removeItem('ghToken'); } catch(e){} $('dlg').close(); toast('Token removed'); };
+$('tokSave').onclick = async () => {
+  const tok = $('tokInput').value.trim();
+  if (!tok) return;
+  try { localStorage.setItem('ghToken', tok); } catch(e){ toast('This browser blocks saving the token'); return; }
+  const r = await gh(`/actions/workflows/${WORKFLOW}`).catch(() => null);
+  if (r && r.ok) { $('dlg').close(); toast('Token saved'); startRefresh(); }
+  else {
+    try { localStorage.removeItem('ghToken'); } catch(e){}
+    $('ownerState').textContent = r && r.status === 404
+      ? `GitHub can't see ${REPO.owner}/${REPO.repo} with this token. Check it has access to this repository.`
+      : 'GitHub rejected this token. Check it hasn\u2019t expired and has the Actions permission.';
+  }
+};
+
+async function startRefresh(){
+  if (refreshing) return;
+  if (!getToken()) { openDialog(); return; }
+  refreshing = true; $('btnRefresh').disabled = true;
+  try {
+    setStatus('<span class="spin"></span>Starting refresh');
+    const before = await gh(`/actions/workflows/${WORKFLOW}/runs?per_page=10`).then(r => r.ok ? r.json() : {workflow_runs: []});
+    const known = new Set((before.workflow_runs || []).map(x => x.id));
+    const d = await gh(`/actions/workflows/${WORKFLOW}/dispatches`, {method: 'POST', body: JSON.stringify({ref: 'main'})});
+    if (d.status === 401 || d.status === 403) throw new Error('GitHub refused the request. Update your token in Refresh settings.');
+    if (d.status !== 204) throw new Error(`GitHub returned ${d.status} when starting the refresh.`);
+    const t0 = Date.now();
+    for (let i = 0; i < 150; i++) {
+      await sleep(i < 6 ? 5000 : 12000);
+      const mins = Math.floor((Date.now() - t0) / 60000), secs = Math.floor((Date.now() - t0) / 1000) % 60;
+      const el = `${mins}:${String(secs).padStart(2, '0')}`;
+      const j = await gh(`/actions/workflows/${WORKFLOW}/runs?per_page=10`).then(r => r.json());
+      const run = (j.workflow_runs || []).find(x => !known.has(x.id) && x.event === 'workflow_dispatch');
+      if (!run) { setStatus(`<span class="spin"></span>Waiting for GitHub to start (${el})`); continue; }
+      if (run.status !== 'completed') { setStatus(`<span class="spin"></span>Refreshing data (${el})`); continue; }
+      if (run.conclusion !== 'success') {
+        setStatus(`Refresh failed. <a href="${esc(run.html_url)}" target="_blank" rel="noopener">View log</a>`, 'err'); return;
+      }
+      setStatus('<span class="spin"></span>Loading new data');
+      const f = await gh('/contents/data/stocks.json?ref=main', {headers: {'Accept': 'application/vnd.github.raw'}});
+      if (!f.ok) throw new Error('Refresh finished but the new data could not be loaded. Reload the page in a minute.');
+      data = await f.json(); showData();
+      setStatus('Data refreshed', 'ok'); toast('Data refreshed'); return;
+    }
+    setStatus('Still running. Reload the page later to see new data.');
+  } catch(e) {
+    setStatus(esc(e.message || 'Refresh failed. Check your connection.'), 'err');
+  } finally { refreshing = false; $('btnRefresh').disabled = false; }
+}
+$('btnRefresh').onclick = () => getToken() ? startRefresh() : openDialog();
+$('btnRefreshSet').onclick = openDialog;
+
+function showData(){
+  const banners = [];
+  if (data.sample) banners.push('<div class="banner">No real data yet. Run the "Refresh screener data" workflow in your repo\u2019s Actions tab, or use Refresh now.</div>');
+  if (data.intraday) banners.push('<div class="banner">Prices are intraday, so today\u2019s volume is only partial. The volume filter will understate activity until after the 3:30 PM close.</div>');
+  $('banner').innerHTML = banners.join('');
+  const gen = data.generatedAt ? new Date(data.generatedAt).toLocaleString('en-IN', {dateStyle:'medium', timeStyle:'short'}) : '—';
+  $('meta').innerHTML = `${esc(data.universe || 'Universe')}, prices as of ${esc(data.asOf || '—')}<br>Updated ${esc(gen)}. Auto-refresh weekdays 5 PM IST.`;
+  render();
+}
+
 /* ---------- load ---------- */
 async function init(){
   renderFilters();
@@ -370,10 +496,7 @@ async function init(){
     $('banner').innerHTML = `<div class="banner err">Couldn't load data/stocks.json (${esc(e.message)}). If you opened this file directly, serve the folder instead: run <code>python -m http.server</code> and open http://localhost:8000.</div>`;
     return;
   }
-  if (data.sample) $('banner').innerHTML = '<div class="banner">This is fictional sample data. Run the "Refresh screener data" workflow in your repo\'s Actions tab to load real Nifty 500 data.</div>';
-  const gen = data.generatedAt ? new Date(data.generatedAt).toLocaleString('en-IN', {dateStyle:'medium', timeStyle:'short'}) : '—';
-  $('meta').innerHTML = `${esc(data.universe || 'Universe')}, prices as of ${esc(data.asOf || '—')}<br>Updated ${esc(gen)}`;
-  render();
+  showData();
 }
 init();
 </script>

@@ -21,7 +21,7 @@ import random
 import re
 import sys
 import time
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from urllib.parse import quote
 
@@ -48,6 +48,7 @@ FUND_STALE_DAYS = 5          # refresh fundamentals older than this...
 FUND_MAX_REFRESH = 120       # ...but at most this many per run (missing ones always fetched)
 SCREENER_DELAY = (1.2, 2.2)  # polite random delay between Screener.in requests (seconds)
 MIN_PRICE_COVERAGE = 0.6     # abort without overwriting if fewer stocks than this got prices
+IST = timezone(timedelta(hours=5, minutes=30))
 
 
 # --------------------------------------------------------------------------- helpers
@@ -346,11 +347,17 @@ def main() -> None:
         })
 
     as_of = max((s["priceDate"] for s in stocks), default=None)
+    now_ist = datetime.now(IST)
+    # During market hours today's candle is still forming: volume is partial-day.
+    intraday = bool(
+        as_of == now_ist.strftime("%Y-%m-%d") and now_ist.weekday() < 5 and now_ist.strftime("%H:%M") < "15:45"
+    )
     payload = {
         "generatedAt": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "asOf": as_of,
         "universe": "Nifty 500",
         "sample": False,
+        "intraday": intraday,
         "count": len(stocks),
         "stocks": stocks,
     }

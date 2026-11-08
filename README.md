@@ -30,7 +30,17 @@ and **Copy share link** puts your exact filter set in the URL.
    The first run fetches fundamentals for all 500 stocks and takes roughly 20–25 minutes; daily runs after that take a few minutes.
 4. Open `https://<your-username>.github.io/<repo-name>/`.
 
-Until the first run finishes, the page shows clearly labelled fictional sample data.
+Until the first run finishes, the page shows a notice instead of data.
+
+## Refresh on demand
+
+The page has a **Refresh now** button. Viewers see when data was last updated; only the repo owner can start a refresh:
+
+1. Create a [fine-grained GitHub token](https://github.com/settings/personal-access-tokens/new) with access to **only this repository** and permissions **Actions: Read and write**, **Contents: Read-only**.
+2. On the page, click **Refresh now** (or ⚙) and paste the token. It is saved only in that browser.
+3. Click **Refresh now** whenever you want fresh data. The page shows progress and loads the new data when the job finishes (about 2–5 minutes).
+
+Refreshing during market hours gives intraday prices; the page flags this because today's volume is still partial.
 
 ## Data sources
 
@@ -58,5 +68,6 @@ Opening `index.html` directly from disk won't work because browsers block readin
 - **Schedule stopped running**: GitHub pauses scheduled workflows in repos with no activity for 60 days. Re-enable it from the Actions tab.
 - **Banks show missing ROCE or D/E**: Screener.in reports bank financials differently. Untick *Exclude stocks with missing data* to let them through on the filters that do have values.
 - **Screener.in returns 429 (rate limited)**: the script backs off and retries; lower `FUND_MAX_REFRESH` in `scripts/fetch_data.py` if it keeps happening.
+- **Refresh now says GitHub refused the request**: the token has expired or lacks *Actions: Read and write*. Create a new one and paste it via ⚙.
 
 For research only. Not investment advice.
