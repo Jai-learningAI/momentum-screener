@@ -1002,52 +1002,52 @@
 },
 "CANHLIFE": {
 "debtToEquity": 0.1525320317266626,
-"fetchedAt": "2026-11-13",
-"marketCap": 12806.0,
-"pe": 95.9,
+"fetchedAt": "2026-11-20",
+"marketCap": 12070.0,
+"pe": 90.4,
 "profitGrowth3y": 12.0,
 "roce": 8.35,
 "roe": 8.11,
 "salesGrowth3y": 11.0,
-"screenerPrice": 135.0
+"screenerPrice": 127.0
 },
 "CAPLIPOINT": {
 "debtToEquity": 0.0012813941568426447,
-"fetchedAt": "2026-11-13",
-"marketCap": 18141.0,
-"pe": 26.3,
+"fetchedAt": "2026-11-20",
+"marketCap": 15418.0,
+"pe": 22.4,
 "profitGrowth3y": 19.0,
 "roce": 24.2,
 "roe": 20.9,
 "salesGrowth3y": 14.0,
-"screenerPrice": 2389.0
+"screenerPrice": 2029.0
 },
 "CARBORUNIV": {
 "debtToEquity": 0.11964512040557668,
-"fetchedAt": "2026-11-13",
-"marketCap": 20236.0,
-"pe": 90.8,
+"fetchedAt": "2026-11-20",
+"marketCap": 19011.0,
+"pe": 85.2,
 "profitGrowth3y": -14.0,
 "roce": 10.5,
 "roe": 6.92,
 "salesGrowth3y": 4.0,
-"screenerPrice": 1062.0
+"screenerPrice": 999.0
 },
 "CARTRADE": {
 "debtToEquity": 0.04901215805471125,
-"fetchedAt": "2026-11-13",
-"marketCap": 13100.0,
-"pe": 55.0,
+"fetchedAt": "2026-11-20",
+"marketCap": 12916.0,
+"pe": 54.3,
 "profitGrowth3y": 89.0,
 "roce": 11.8,
 "roe": 9.65,
 "salesGrowth3y": 29.0,
-"screenerPrice": 2696.0
+"screenerPrice": 2656.0
 },
 "CASTROLIND": {
 "debtToEquity": 0.02776322682032478,
-"fetchedAt": "2026-11-13",
-"marketCap": 18811.0,
+"fetchedAt": "2026-11-20",
+"marketCap": 18828.0,
 "pe": 18.3,
 "profitGrowth3y": 6.0,
 "roce": 60.3,
@@ -1068,47 +1068,47 @@
 },
 "CDSL": {
 "debtToEquity": 0.0010080645161290322,
-"fetchedAt": "2026-11-13",
-"marketCap": 30242.0,
-"pe": 59.9,
+"fetchedAt": "2026-11-20",
+"marketCap": 29887.0,
+"pe": 59.2,
 "profitGrowth3y": 18.0,
 "roce": 32.0,
 "roe": 24.5,
 "salesGrowth3y": 27.0,
-"screenerPrice": 1447.0
+"screenerPrice": 1430.0
 },
 "CEATLTD": {
 "debtToEquity": 0.8193912517637573,
-"fetchedAt": "2026-11-13",
-"marketCap": 14332.0,
+"fetchedAt": "2026-11-20",
+"marketCap": 14343.0,
 "pe": 25.1,
 "profitGrowth3y": 54.0,
 "roce": 19.2,
 "roe": 16.1,
 "salesGrowth3y": 11.0,
-"screenerPrice": 3540.0
+"screenerPrice": 3543.0
 },
 "CEMPRO": {
 "debtToEquity": 0.3516609392898053,
-"fetchedAt": "2026-11-13",
-"marketCap": 24251.0,
-"pe": 38.8,
+"fetchedAt": "2026-11-20",
+"marketCap": 26077.0,
+"pe": 41.8,
 "profitGrowth3y": 68.0,
 "roce": 32.8,
 "roe": 27.8,
 "salesGrowth3y": 25.0,
-"screenerPrice": 1315.0
+"screenerPrice": 1416.0
 },
 "CENTRALBK": {
 "debtToEquity": 0.9344348912051491,
-"fetchedAt": "2026-11-13",
-"marketCap": 29164.0,
-"pe": 6.05,
+"fetchedAt": "2026-11-20",
+"marketCap": 31128.0,
+"pe": 6.46,
 "profitGrowth3y": 39.0,
 "roce": 5.64,
 "roe": 11.9,
 "salesGrowth3y": 12.0,
-"screenerPrice": 32.2
+"screenerPrice": 34.4
 },
 "CESC": {
 "debtToEquity": 1.8012512030798844,
@@ -1123,14 +1123,14 @@
 },
 "CGCL": {
 "debtToEquity": 3.8317204976750032,
-"fetchedAt": "2026-11-13",
-"marketCap": 23682.0,
-"pe": 18.1,
+"fetchedAt": "2026-11-20",
+"marketCap": 22592.0,
+"pe": 17.2,
 "profitGrowth3y": 67.0,
 "roce": 11.7,
 "roe": 16.5,
 "salesGrowth3y": 48.0,
-"screenerPrice": 246.0
+"screenerPrice": 235.0
 },
 "CGPOWER": {
 "debtToEquity": 0.01933859709348896,
@@ -1145,58 +1145,58 @@
 },
 "CHAMBLFERT": {
 "debtToEquity": 0.1560271198379854,
-"fetchedAt": "2026-11-13",
-"marketCap": 15383.0,
-"pe": 8.05,
+"fetchedAt": "2026-11-20",
+"marketCap": 14888.0,
+"pe": 7.79,
 "profitGrowth3y": 24.0,
 "roce": 25.2,
 "roe": 20.0,
 "salesGrowth3y": -9.0,
-"screenerPrice": 384.0
+"screenerPrice": 372.0
 },
 "CHENNPETRO": {
 "debtToEquity": 0.16199514455969985,
-"fetchedAt": "2026-11-13",
-"marketCap": 21276.0,
-"pe": 3.73,
+"fetchedAt": "2026-11-20",
+"marketCap": 21235.0,
+"pe": 3.72,
 "profitGrowth3y": -4.0,
 "roce": 34.9,
 "roe": 32.0,
 "salesGrowth3y": -6.0,
-"screenerPrice": 1428.0
+"screenerPrice": 1426.0
 },
 "CHOICEIN": {
 "debtToEquity": 0.6720221606648199,
-"fetchedAt": "2026-11-13",
-"marketCap": 16205.0,
-"pe": 67.6,
+"fetchedAt": "2026-11-20",
+"marketCap": 16226.0,
+"pe": 67.7,
 "profitGrowth3y": 53.0,
 "roce": 17.9,
 "roe": 16.1,
 "salesGrowth3y": 43.0,
-"screenerPrice": 727.0
+"screenerPrice": 728.0
 },
 "CHOLAFIN": {
 "debtToEquity": 6.715828796478629,
-"fetchedAt": "2026-11-13",
-"marketCap": 158841.0,
-"pe": 25.5,
+"fetchedAt": "2026-11-20",
+"marketCap": 160652.0,
+"pe": 25.8,
 "profitGrowth3y": 25.0,
 "roce": 9.71,
 "roe": 19.4,
 "salesGrowth3y": 34.0,
-"screenerPrice": 1850.0
+"screenerPrice": 1875.0
 },
 "CHOLAHLDNG": {
 "debtToEquity": 13.50312408759124,
-"fetchedAt": "2026-11-13",
-"marketCap": 27413.0,
-"pe": 9.93,
+"fetchedAt": "2026-11-20",
+"marketCap": 26314.0,
+"pe": 9.53,
 "profitGrowth3y": 24.0,
 "roce": 9.75,
 "roe": 17.5,
 "salesGrowth3y": 29.0,
-"screenerPrice": 1460.0
+"screenerPrice": 1401.0
 },
 "CIEINDIA": {
 "debtToEquity": 0.06625339015885316,
@@ -1211,47 +1211,47 @@
 },
 "CIPLA": {
 "debtToEquity": 0.01974799412362979,
-"fetchedAt": "2026-11-13",
-"marketCap": 112306.0,
-"pe": 36.2,
+"fetchedAt": "2026-11-20",
+"marketCap": 114518.0,
+"pe": 36.9,
 "profitGrowth3y": 10.0,
 "roce": 15.5,
 "roe": 11.6,
 "salesGrowth3y": 7.0,
-"screenerPrice": 1392.0
+"screenerPrice": 1415.0
 },
 "CLEAN": {
 "debtToEquity": 0.0011961722488038277,
-"fetchedAt": "2026-11-13",
-"marketCap": 7692.0,
-"pe": 33.0,
+"fetchedAt": "2026-11-20",
+"marketCap": 7335.0,
+"pe": 31.4,
 "profitGrowth3y": -8.0,
 "roce": 20.7,
 "roe": 15.3,
 "salesGrowth3y": 1.0,
-"screenerPrice": 724.0
+"screenerPrice": 690.0
 },
 "CLEANMAX": {
 "debtToEquity": 3.63099173553719,
-"fetchedAt": "2026-11-13",
-"marketCap": 15495.0,
-"pe": 86.7,
+"fetchedAt": "2026-11-20",
+"marketCap": 14439.0,
+"pe": 80.8,
 "profitGrowth3y": -8.0,
 "roce": 6.16,
 "roe": 1.76,
 "salesGrowth3y": 27.0,
-"screenerPrice": 1318.0
+"screenerPrice": 1226.0
 },
 "CMPDI": {
 "debtToEquity": 0.0004091653027823241,
-"fetchedAt": "2026-11-13",
-"marketCap": 13504.0,
-"pe": 20.1,
+"fetchedAt": "2026-11-20",
+"marketCap": 12849.0,
+"pe": 19.1,
 "profitGrowth3y": 27.0,
 "roce": 38.1,
 "roe": 28.4,
 "salesGrowth3y": 19.0,
-"screenerPrice": 189.0
+"screenerPrice": 180.0
 },
 "COALINDIA": {
 "debtToEquity": 0.12291519573232917,
@@ -1398,14 +1398,14 @@
 },
 "CUB": {
 "debtToEquity": 0.47176554681915656,
-"fetchedAt": "2026-11-13",
-"marketCap": 23015.0,
-"pe": 15.4,
+"fetchedAt": "2026-11-20",
+"marketCap": 24720.0,
+"pe": 16.6,
 "profitGrowth3y": 12.0,
 "roce": 6.74,
 "roe": 13.2,
 "salesGrowth3y": 13.0,
-"screenerPrice": 232.0
+"screenerPrice": 249.0
 },
 "CUMMINSIND": {
 "debtToEquity": 0.004458368478129895,
